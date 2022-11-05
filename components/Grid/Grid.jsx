@@ -71,6 +71,7 @@ export default function Grid() {
           y: j,
           isMine,
           isHidden: true,
+          hasBeenFlagged: false,
           value: -1,
         };
         newLine.push(tile);
@@ -94,7 +95,6 @@ export default function Grid() {
               value++;
             }
           });
-          console.log(newGrid[tile.x][tile.y]);
           newGrid[tile.x][tile.y] = { ...tile, value };
           //change the corresponding tile value in newGrid
         }
@@ -125,7 +125,7 @@ export default function Grid() {
    * Reveal hidden tiles neighboring a tile with value 0
    */
   function revealTiles(tile) {
-    if (tile.isHidden) {
+    if (tile.isHidden && !tile.hasBeenFlagged) {
       changeTileValue(tile, { isHidden: false });
       const neighbors = getNeighbors(tile, tilesArray);
       // Get neighbors to potentially propagate the reveal
@@ -142,10 +142,10 @@ export default function Grid() {
   }
 
   /**
-   * Reveal hidden tiles on click
+   * Flag or unflag the current tile
    */
-  function handleClick(tile) {
-    revealTiles(tile);
+  function flagTile(tile) {
+    changeTileValue(tile, { hasBeenFlagged: !tile.hasBeenFlagged });
   }
 
   return (
@@ -160,8 +160,12 @@ export default function Grid() {
               value={tile.value}
               isMine={tile.isMine}
               isHidden={tile.isHidden}
-              handleClick={() => {
-                handleClick(tile);
+              hasBeenFlagged={tile.hasBeenFlagged}
+              handleShortPress={() => {
+                revealTiles(tile);
+              }}
+              handleLongPress={() => {
+                flagTile(tile);
               }}
             />
           ))}
