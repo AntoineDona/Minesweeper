@@ -70,7 +70,7 @@ export default function Grid() {
           x: i,
           y: j,
           isMine,
-          isHidden: false,
+          isHidden: true,
           value: -1,
         };
         newLine.push(tile);
@@ -84,20 +84,23 @@ export default function Grid() {
       for (let j = 0; j < gridParams.width; j++) {
         // loop over the columns
         const tile = newGrid[i][j];
-        const neighbors = getNeighbors(tile, newGrid);
-        //get all neighbooring tiless
         let value = 0;
-        //count the mines around the tile
-        neighbors.forEach((neighbor) => {
-          if (neighbor.isMine) {
-            value++;
-          }
-        });
-        newGrid[tile.x][tile.y] = { ...tile, value };
-        //change the corresponding tile value in newGrid
+        if (!tile.isMine) {
+          const neighbors = getNeighbors(tile, newGrid);
+          //get all neighbooring tiless
+          //count the mines around the tile
+          neighbors.forEach((neighbor) => {
+            if (neighbor.isMine) {
+              value++;
+            }
+          });
+          console.log(newGrid[tile.x][tile.y]);
+          newGrid[tile.x][tile.y] = { ...tile, value };
+          //change the corresponding tile value in newGrid
+        }
+        // else it's a mine and we keep the value -1
       }
     }
-
     // Finally we "save" this new grid
     setTilesArray(newGrid);
   }
@@ -119,12 +122,30 @@ export default function Grid() {
   }
 
   /**
+   * Reveal hidden tiles neighboring a tile with value 0
+   */
+  function revealTiles(tile) {
+    if (tile.isHidden) {
+      changeTileValue(tile, { isHidden: false });
+      const neighbors = getNeighbors(tile, tilesArray);
+      // Get neighbors to potentially propagate the reveal
+      neighbors.forEach((neighbor) => {
+        if (neighbor.value === 0) {
+          revealTiles(neighbor);
+          //if a neighbor is empty, we reveal it
+        } else if (tile.value === 0) {
+          revealTiles(neighbor);
+          //else if the current tile has no mines around it, we reveal all its neighbors
+        }
+      });
+    }
+  }
+
+  /**
    * Reveal hidden tiles on click
    */
   function handleClick(tile) {
-    if (tile.isHidden) {
-      changeTileValue(tile, { isHidden: false });
-    }
+    revealTiles(tile);
   }
 
   return (

@@ -4,7 +4,7 @@ export default function Tile({ x, y, value, isMine, isHidden, handleClick }) {
   return (
     <TouchableHighlight onPress={handleClick}>
       <View style={styles.tile}>
-        <Text>{!isHidden && isMine ? "M" : value}</Text>
+        <Text>{!isHidden && value}</Text>
       </View>
     </TouchableHighlight>
   );
