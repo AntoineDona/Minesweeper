@@ -1,6 +1,13 @@
 import React from "react";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
+
+import Grid from "./Grid/Grid";
 
 export default function Game() {
-  return <Text>Game</Text>;
+  return (
+    <View>
+      <Text>Minesweeper</Text>
+      <Grid />
+    </View>
+  );
 }
