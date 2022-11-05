@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 
 import Tile from "./Tile";
 
@@ -28,7 +28,7 @@ export default function Grid() {
         const tile = {
           x: i,
           y: j,
-          isBomb: Math.random() < gridParams.mineProba,
+          isMine: Math.random() < gridParams.mineProba,
         };
         console.log(tile);
         newLine.push(tile);
@@ -43,7 +43,12 @@ export default function Grid() {
       {tiles.map((row, index) => (
         <View key={index} style={{ flexDirection: "row" }}>
           {row.map((tile) => (
-            <Tile x={tile.x} y={tile.y} isMine={tile.isMine} />
+            <Tile
+              key={(tile.x, tile.y)}
+              x={tile.x}
+              y={tile.y}
+              isMine={tile.isMine}
+            />
           ))}
         </View>
       ))}
