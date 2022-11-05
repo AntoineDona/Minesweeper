@@ -4,22 +4,62 @@ import { View } from "react-native";
 import Tile from "./Tile";
 
 export default function Grid() {
-  const [tiles, setTiles] = useState([[]]); // 2D Array containing the tiles
+  const [tilesArray, setTilesArray] = useState([[]]); // 2D Array containing the tiles
   const gridParams = {
     width: 7,
     height: 12,
     mineProba: 0.2,
   };
 
-  useState(() => {
-    generateNewGrid();
-  }, []);
+  /**
+   * Get the neighbors of a tile
+   * @param {object} centerTile Tile from which we get the neighbors.
+   * @param {array[]} grid Grid from which we get the neighbors.
+   * @return {list} List of all the neighbors.
+   */
+  function getNeighbors(centerTile, grid) {
+    const x = centerTile.x;
+    const y = centerTile.y;
+    const maxX = gridParams.height - 1;
+    const maxY = gridParams.width - 1;
+
+    const neighbors = [];
+
+    if (x > 0 && y > 0) {
+      neighbors.push(grid[x - 1][y - 1]); //add top left tile
+    }
+    if (y > 0) {
+      neighbors.push(grid[x][y - 1]); //add top mid tile
+    }
+    if (x < maxX && y > 0) {
+      neighbors.push(grid[x + 1][y - 1]); //add top right tile
+    }
+    if (x > 0) {
+      neighbors.push(grid[x - 1][y]); //add mid left tile
+    }
+    if (x < maxX) {
+      neighbors.push(grid[x + 1][y]); //add mid right tile
+    }
+    if (x > 0 && y < maxY) {
+      neighbors.push(grid[x - 1][y + 1]); //add bottom left tile
+    }
+    if (y < maxY) {
+      neighbors.push(grid[x][y + 1]); //add bottom mid tile
+    }
+    if (x < maxX && y < maxY) {
+      neighbors.push(grid[x + 1][y + 1]); //add bottom right tile
+    }
+
+    return neighbors;
+  }
 
   /**
-   * Generate new grid tiles
+   * Generate new grid of tiles
+   * 1) Creates a grid called newTiles and places mines
+   * 2) Calculates the values i.e the number of mines surrounding each tile
    */
   function generateNewGrid() {
-    const newTiles = [];
+    const newGrid = [];
     for (let i = 0; i < gridParams.height; i++) {
       // loop over the lines
       const newLine = [];
@@ -30,14 +70,52 @@ export default function Grid() {
           x: i,
           y: j,
           isMine,
-          isHidden: true,
-          value: isMine ? 0 : 1,
+          isHidden: false,
+          value: -1,
         };
         newLine.push(tile);
       }
-      newTiles.push(newLine);
+      newGrid.push(newLine);
     }
-    setTiles(newTiles);
+    // Now that we know where all the mines are,
+    //we can get the value of each tile, i.e the number of bombs around it
+    for (let i = 0; i < gridParams.height; i++) {
+      // loop over the lines
+      for (let j = 0; j < gridParams.width; j++) {
+        // loop over the columns
+        const tile = newGrid[i][j];
+        const neighbors = getNeighbors(tile, newGrid);
+        //get all neighbooring tiless
+        let value = 0;
+        //count the mines around the tile
+        neighbors.forEach((neighbor) => {
+          if (neighbor.isMine) {
+            value++;
+          }
+        });
+        newGrid[tile.x][tile.y] = { ...tile, value };
+        //change the corresponding tile value in newGrid
+      }
+    }
+
+    // Finally we "save" this new grid
+    setTilesArray(newGrid);
+  }
+
+  useState(() => {
+    generateNewGrid();
+  }, []);
+
+  /**
+   * Change the inner state of a particular tile.
+   * @param {object} tile Tile to change.
+   * @param {object} valuesToChange Object containing all the key/value pairs to change.
+   * @return {number} The result of adding num1 and num2.
+   */
+  function changeTileValue(tile, valuesToChange) {
+    const newTiles = [...tilesArray];
+    newTiles[tile.x][tile.y] = { ...tile, ...valuesToChange };
+    setTilesArray(newTiles);
   }
 
   /**
@@ -45,15 +123,13 @@ export default function Grid() {
    */
   function handleClick(tile) {
     if (tile.isHidden) {
-      const newTiles = [...tiles];
-      newTiles[tile.x][tile.y].isHidden = false;
-      setTiles(newTiles);
+      changeTileValue(tile, { isHidden: false });
     }
   }
 
   return (
     <View>
-      {tiles.map((row, index) => (
+      {tilesArray.map((row, index) => (
         <View key={index} style={{ flexDirection: "row" }}>
           {row.map((tile) => (
             <Tile
