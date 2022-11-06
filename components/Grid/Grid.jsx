@@ -145,7 +145,9 @@ export default function Grid({ gridParams, gameStatus, setGameStatus }) {
    * Flag or unflag the current tile
    */
   function flagTile(tile) {
-    changeTileValue(tile, { hasBeenFlagged: !tile.hasBeenFlagged });
+    if (tile.isHidden) {
+      changeTileValue(tile, { hasBeenFlagged: !tile.hasBeenFlagged });
+    }
   }
 
   return (
