@@ -11,7 +11,7 @@ export default function Game() {
   const [gridParams, setGridParams] = useState({
     width: 7,
     height: 12,
-    mineProba: 0.2,
+    minesAmount: 10,
   });
 
   const [fontsLoaded] = useFonts({
@@ -37,7 +37,7 @@ export default function Game() {
     <View>
       <Text style={textStyle}>MINESWEEPER</Text>
       <Grid
-        gridParams={gridParams}
+        {...gridParams}
         gameStatus={gameStatus}
         setGameStatus={setGameStatus}
       />

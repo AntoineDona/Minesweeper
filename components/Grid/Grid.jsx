@@ -3,8 +3,15 @@ import { View } from "react-native";
 
 import Tile from "./Tile/Tile";
 
-export default function Grid({ gridParams, gameStatus, setGameStatus }) {
+export default function Grid({
+  width,
+  height,
+  minesAmount,
+  gameStatus,
+  setGameStatus,
+}) {
   const [tilesArray, setTilesArray] = useState([[]]); // 2D Array containing the tiles
+
   /**
    * Get the neighbors of a tile
    * @param {object} centerTile Tile from which we get the neighbors.
@@ -14,8 +21,8 @@ export default function Grid({ gridParams, gameStatus, setGameStatus }) {
   function getNeighbors(centerTile, grid) {
     const x = centerTile.x;
     const y = centerTile.y;
-    const maxX = gridParams.height - 1;
-    const maxY = gridParams.width - 1;
+    const maxX = height - 1;
+    const maxY = width - 1;
 
     const neighbors = [];
 
@@ -48,22 +55,53 @@ export default function Grid({ gridParams, gameStatus, setGameStatus }) {
   }
 
   /**
+   * Place a certain amount of mines in a 2D array
+   * @param {number} width Width of the grid.
+   * @param {number} height Height of the grid.
+   * @param {number} mines Number of mines to place.
+   * @return {boolean[]} Array of size width*height filled with boolean values indicating the presence of mines
+   */
+  function generateMinesArray(width, height, mines) {
+    const minesArray = Array(height).fill(false);
+    console.log("init", minesArray);
+    //Creates an array filled with false
+    let minesCount = 0;
+    let iterations = 0;
+    while (minesCount < mines && iterations < 100) {
+      //while we did not place every mine
+      const i = Math.floor(Math.random() * width * height);
+      //choose a random row and random column
+      if (!minesArray[i]) {
+        //check if there isn't already a mine
+        minesArray[i] = true;
+        //place a mine
+        minesCount++;
+      }
+      iterations++;
+    }
+    return minesArray;
+  }
+
+  /**
    * Generate new grid of tiles
-   * 1) Creates a grid called newTiles and places mines
-   * 2) Calculates the values i.e the number of mines surrounding each tile
+   * 1) Place the mines in a grid
+   * 2) Creates a grid called newTiles
+   * 3) Calculates the values i.e the number of mines surrounding each tile
    */
   function generateNewGrid() {
+    const minesArray = generateMinesArray(width, height, minesAmount);
+    console.log(minesArray);
+
     const newGrid = [];
-    for (let i = 0; i < gridParams.height; i++) {
+    for (let i = 0; i < height; i++) {
       // loop over the lines
       const newLine = [];
-      for (let j = 0; j < gridParams.width; j++) {
-        // loop over the columns
-        const isMine = Math.random() < gridParams.mineProba;
+      for (let j = 0; j < width; j++) {
+        // loop over the column
         const tile = {
           x: i,
           y: j,
-          isMine,
+          isMine: minesArray[i * width + j],
           isHidden: true,
           hasBeenFlagged: false,
           value: -1,
@@ -74,9 +112,9 @@ export default function Grid({ gridParams, gameStatus, setGameStatus }) {
     }
     // Now that we know where all the mines are,
     //we can get the value of each tile, i.e the number of bombs around it
-    for (let i = 0; i < gridParams.height; i++) {
+    for (let i = 0; i < height; i++) {
       // loop over the lines
-      for (let j = 0; j < gridParams.width; j++) {
+      for (let j = 0; j < width; j++) {
         // loop over the columns
         const tile = newGrid[i][j];
         let value = 0;
