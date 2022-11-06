@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View } from "react-native";
+import { View, Vibration } from "react-native";
 
 import Tile from "./Tile/Tile";
 
@@ -195,7 +195,7 @@ export default function Grid({
           //remove flags if present
           changeTileValue(tile, { hasBeenFlagged: false, isHidden: false });
         } else if (tile.isHidden) {
-          //else if tile is hidden, reveal it
+          //else if the tile is hidden, reveal it
           changeTileValue(tile, { isHidden: false });
         }
       }
@@ -207,6 +207,7 @@ export default function Grid({
    */
   function flagTile(tile) {
     if (tile.isHidden) {
+      Vibration.vibrate(50);
       changeTileValue(tile, { hasBeenFlagged: !tile.hasBeenFlagged });
     }
   }
