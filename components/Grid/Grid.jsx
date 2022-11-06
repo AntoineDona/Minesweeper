@@ -3,7 +3,7 @@ import { View } from "react-native";
 
 import Tile from "./Tile";
 
-export default function Grid() {
+export default function Grid({ setGameStatus }) {
   const [tilesArray, setTilesArray] = useState([[]]); // 2D Array containing the tiles
   const gridParams = {
     width: 7,
@@ -127,6 +127,10 @@ export default function Grid() {
   function revealTiles(tile) {
     if (tile.isHidden && !tile.hasBeenFlagged) {
       changeTileValue(tile, { isHidden: false });
+      if (tile.isMine) {
+        //if we click on a mine, we lose
+        setGameStatus("lost");
+      }
       const neighbors = getNeighbors(tile, tilesArray);
       // Get neighbors to potentially propagate the reveal
       neighbors.forEach((neighbor) => {
