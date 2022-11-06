@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
 
 import Grid from "./Grid/Grid";
-import ModalMenu from "./Modal";
+import ModalMenu from "./Modal/Modal";
 
 export default function Game() {
   const [gameStatus, setGameStatus] = useState("playing");
