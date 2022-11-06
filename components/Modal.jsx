@@ -16,19 +16,22 @@ export default function ModalMenu({
 }) {
   let title;
   let buttonText;
+  let backgroundStyle;
 
   if (gameStatus === "won") {
     title = "You Won !";
     buttonText = "New game";
+    backgroundStyle = styles.winBackground;
   } else {
     title = "You lost...";
-    buttonText = "Retry";
+    buttonText = "Try again !";
+    backgroundStyle = styles.lossBackground;
   }
 
   return (
     <Modal animationType="fade" transparent visible={modalVisible}>
       <View style={styles.centeredView}>
-        <View style={styles.modalView}>
+        <View style={[styles.modalView, backgroundStyle]}>
           <Text style={styles.modalTitle}>{title}</Text>
           <Pressable style={styles.button}>
             <Text style={styles.textStyle}>{buttonText}</Text>
@@ -51,6 +54,7 @@ const styles = StyleSheet.create({
     margin: 20,
     color: "black",
     backgroundColor: "white",
+    borderRadius: 20,
     padding: 20,
     width: Dimensions.get("window").width * 0.8,
     height: Dimensions.get("window").height * 0.7,
@@ -81,12 +85,18 @@ const styles = StyleSheet.create({
   modalTitle: {
     marginTop: "auto",
     textAlign: "center",
-    color: "black",
-    fontSize: 20,
+    color: "white",
+    fontSize: 30,
     fontWeight: "bold",
   },
   modalText: {
     textAlign: "center",
     color: "white",
+  },
+  winBackground: {
+    backgroundColor: "#408F2B",
+  },
+  lossBackground: {
+    backgroundColor: "#CE4760",
   },
 });
