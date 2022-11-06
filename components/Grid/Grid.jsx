@@ -3,14 +3,8 @@ import { View } from "react-native";
 
 import Tile from "./Tile";
 
-export default function Grid({ gameStatus, setGameStatus }) {
+export default function Grid({ gridParams, gameStatus, setGameStatus }) {
   const [tilesArray, setTilesArray] = useState([[]]); // 2D Array containing the tiles
-  const gridParams = {
-    width: 7,
-    height: 12,
-    mineProba: 0.2,
-  };
-
   /**
    * Get the neighbors of a tile
    * @param {object} centerTile Tile from which we get the neighbors.
