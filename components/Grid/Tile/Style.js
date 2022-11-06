@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 10,
-    backgroundColor: "#1A5E63",
+    backgroundColor: "#028090",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
@@ -19,8 +19,11 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 20,
   },
+  emptyTile: {
+    backgroundColor: "#1A5E63",
+  },
   hiddenTile: {
-    backgroundColor: "#028090",
+    backgroundColor: "#134549",
   },
   hiddenText: {
     color: "white",
@@ -30,8 +33,9 @@ const styles = StyleSheet.create({
   },
 });
 
+const emptyTile = StyleSheet.compose(styles.tile, styles.emptyTile);
 const hiddenTile = StyleSheet.compose(styles.tile, styles.hiddenTile);
 const hiddenText = StyleSheet.compose(styles.text, styles.hiddenText);
 const flaggedTile = StyleSheet.compose(styles.tile, styles.flaggedTile);
 
-export { styles, hiddenTile, hiddenText, flaggedTile };
+export { styles, emptyTile, hiddenTile, hiddenText, flaggedTile };

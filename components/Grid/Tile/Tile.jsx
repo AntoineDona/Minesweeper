@@ -1,7 +1,13 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View, Text, Pressable } from "react-native";
 
-import { styles, hiddenTile, hiddenText, flaggedTile } from "./Style";
+import {
+  styles,
+  emptyTile,
+  hiddenTile,
+  hiddenText,
+  flaggedTile,
+} from "./Style";
 
 export default function Tile({
   x,
@@ -32,6 +38,8 @@ export default function Tile({
     tileStyle = flaggedTile;
   } else if (isHidden) {
     tileStyle = hiddenTile;
+  } else if (value === 0) {
+    tileStyle = emptyTile;
   } else {
     tileStyle = styles.tile;
   }
