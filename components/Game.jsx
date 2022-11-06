@@ -12,6 +12,15 @@ export default function Game() {
     "Land-Mine": require("../assets/fonts/LANDMINE.ttf"),
   });
 
+  const text = styles.text;
+  let textStyle;
+  if (fontsLoaded) {
+    const fontStyle = StyleSheet.create({ font: { FontFamily: "Land-Mine" } });
+    textStyle = StyleSheet.compose([text, fontStyle.font]);
+  } else {
+    textStyle = styles.text;
+  }
+
   useEffect(() => {
     if (gameStatus !== "playing") {
       setModalVisible();
@@ -20,7 +29,7 @@ export default function Game() {
 
   return (
     <View>
-      <Text style={styles.text}>MINESWEEPER</Text>
+      <Text style={textStyle}>MINESWEEPER</Text>
       <Grid setGameStatus={setGameStatus} />
       <ModalMenu
         gameStatus={gameStatus}
@@ -37,7 +46,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#1A5E63",
     fontSize: 30,
-    fontFamily: "Land-Mine",
     textAlign: "center",
     marginBottom: 20,
   },
