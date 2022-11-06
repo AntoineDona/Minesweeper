@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 
-import Tile from "./Tile";
+import Tile from "./Tile/Tile";
 
 export default function Grid({ gridParams, gameStatus, setGameStatus }) {
   const [tilesArray, setTilesArray] = useState([[]]); // 2D Array containing the tiles
