@@ -163,7 +163,10 @@ export default function Grid({
       changeTileValue(tile, { isHidden: false });
       if (tile.isMine) {
         //if we click on a mine, we lose
-        setGameStatus("lost");
+        revealGrid();
+        setTimeout(() => {
+          setGameStatus("lost");
+        }, 2000);
       }
       const neighbors = getNeighbors(tile, tilesArray);
       // Get neighbors to potentially propagate the reveal
@@ -176,6 +179,26 @@ export default function Grid({
           //else if the current tile has no mines around it, we reveal all its neighbors
         }
       });
+    }
+  }
+
+  /**
+   * Reveal the entire grid, and remove the flags
+   */
+  function revealGrid() {
+    for (let i = 0; i < height; i++) {
+      // loop over the lines
+      for (let j = 0; j < width; j++) {
+        // loop over the columns
+        const tile = tilesArray[i][j];
+        if (tile.hasBeenFlagged) {
+          //remove flags if present
+          changeTileValue(tile, { hasBeenFlagged: false, isHidden: false });
+        } else if (tile.isHidden) {
+          //else if tile is hidden, reveal it
+          changeTileValue(tile, { isHidden: false });
+        }
+      }
     }
   }
 
@@ -195,12 +218,7 @@ export default function Grid({
           {row.map((tile) => (
             <Tile
               key={(tile.x, tile.y)}
-              x={tile.x}
-              y={tile.y}
-              value={tile.value}
-              isMine={tile.isMine}
-              isHidden={tile.isHidden}
-              hasBeenFlagged={tile.hasBeenFlagged}
+              {...tile}
               handleShortPress={() => {
                 revealTiles(tile);
               }}
