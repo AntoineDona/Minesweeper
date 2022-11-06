@@ -19,7 +19,7 @@ export default function Tile({
   handleShortPress,
   handleLongPress,
 }) {
-  let toDisplay = " ";
+  let toDisplay = "";
 
   if (isHidden) {
     if (hasBeenFlagged) {

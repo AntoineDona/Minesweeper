@@ -158,39 +158,37 @@ export default function Grid({
   }
 
   /**
-   * Check winning condition i.e all tiles without a mine have been revealed
-   * Toggle win if so
+   * Toggles win: Reveal grid and set game status to "won"
    */
-  function checkWin() {
-    if (score === width * height - minesAmount) {
-      revealGrid();
-      setTimeout(() => {
-        setGameStatus("won");
-      }, 1000);
-    }
+  function toggleWin() {
+    revealGrid();
+    setTimeout(() => {
+      setGameStatus("won");
+    }, 1000);
   }
 
   /**
-   * Run checkWin each time the score has increased
+   * Check winning condition i.e all tiles without a mine have been revealed
+   * each time the score has increased
    */
   useEffect(() => {
     // console.log("score", score);
     // console.log("score to win", width * height - minesAmount);
-    checkWin();
+    if (score === width * height - minesAmount) {
+      toggleWin();
+    }
   }, [score]);
 
   /**
    * Check if the tile that has been pressed was a bomb or not
    * Toggle loss if so
    */
-  function checkLoss(tile) {
-    if (tile.isMine) {
-      //if we click on a mine, we lose
-      revealGrid();
-      setTimeout(() => {
-        setGameStatus("lost");
-      }, 1000);
-    }
+  function toggleLoss() {
+    //if we click on a mine, we lose
+    revealGrid();
+    setTimeout(() => {
+      setGameStatus("lost");
+    }, 1000);
   }
 
   /**
@@ -198,47 +196,49 @@ export default function Grid({
    */
   function revealTiles(tile) {
     if (tile.isHidden && !tile.hasBeenFlagged) {
-      checkLoss(tile);
-    } else {
-      const tilesToReveal = [tile];
+      if (tile.isMine) {
+      } else {
+        const tilesToReveal = [tile];
 
-      /**
-       * Nested not-so-pretty recursive function that gets all the tiles to reveal
-       * @param {object} tile Tile from which we get the neighbors.
-       * @return {list} List of all tiles to reveal.
-       */
-      // eslint-disable-next-line no-inner-declarations
-      function getTilesToReveal(tile) {
-        const neighbors = getNeighbors(tile, tilesArray);
-        // Get neighbors to potentially propagate the reveal
+        /**
+         * Nested not-so-pretty recursive function that gets all the tiles to reveal
+         * @param {object} tile Tile from which we get the neighbors.
+         * @return {list} List of all tiles to reveal.
+         */
+        // eslint-disable-next-line no-inner-declarations
+        function getTilesToReveal(tile) {
+          const neighbors = getNeighbors(tile, tilesArray);
+          // Get neighbors to potentially propagate the reveal
 
-        neighbors.forEach((neighbor) => {
-          if (neighbor.isHidden && (tile.value === 0 || neighbor.value === 0)) {
-            //if the center tile has no mines around it or if the selected neighbor ampty,
-            if (!tilesToReveal.includes(neighbor)) {
-              // check if the neighbor is not already in the list,
-              tilesToReveal.push(neighbor);
-              // add it to the list of tiles to reveal
-              getTilesToReveal(neighbor);
-              //and check its own neighbors
+          neighbors.forEach((neighbor) => {
+            if (
+              neighbor.isHidden &&
+              (tile.value === 0 || neighbor.value === 0)
+            ) {
+              //if the center tile has no mines around it or if the selected neighbor ampty,
+              if (!tilesToReveal.includes(neighbor)) {
+                // check if the neighbor is not already in the list,
+                tilesToReveal.push(neighbor);
+                // add it to the list of tiles to reveal
+                getTilesToReveal(neighbor);
+                //and check its own neighbors
+              }
             }
-          }
+          });
+        }
+        getTilesToReveal(tile);
+        //get list of all tiles to reveal
+        tilesToReveal.forEach((tile) => {
+          //for each tile to reveal
+          changeTileValue(tile, { isHidden: false });
+          //reveal it
         });
+
+        setScore((score) => score + tilesToReveal.length);
+        //Add 1 to the counter of revealed tiles
       }
-
-      getTilesToReveal(tile);
-      //get list of all tiles to reveal
-      tilesToReveal.forEach((tile) => {
-        //for each tile to reveal
-        changeTileValue(tile, { isHidden: false });
-        //reveal it
-      });
-
-      setScore((score) => score + tilesToReveal.length);
-      //Add 1 to the counter of revealed tiles
     }
   }
-
   /**
    * Reveal the entire grid, and remove the flags
    */
