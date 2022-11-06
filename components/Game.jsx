@@ -30,7 +30,7 @@ export default function Game() {
   return (
     <View>
       <Text style={textStyle}>MINESWEEPER</Text>
-      <Grid setGameStatus={setGameStatus} />
+      <Grid gameStatus={gameStatus} setGameStatus={setGameStatus} />
       <ModalMenu
         gameStatus={gameStatus}
         setGameStatus={setGameStatus}

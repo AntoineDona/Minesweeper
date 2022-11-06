@@ -28,12 +28,17 @@ export default function ModalMenu({
     backgroundStyle = styles.lossBackground;
   }
 
+  function retry() {
+    setGameStatus("playing");
+    setModalVisible(false);
+  }
+
   return (
     <Modal animationType="fade" transparent visible={modalVisible}>
       <View style={styles.centeredView}>
         <View style={[styles.modalView, backgroundStyle]}>
           <Text style={styles.modalTitle}>{title}</Text>
-          <Pressable style={styles.button}>
+          <Pressable onPress={retry} style={styles.button}>
             <Text style={styles.textStyle}>{buttonText}</Text>
           </Pressable>
         </View>

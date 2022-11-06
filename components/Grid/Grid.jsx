@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View } from "react-native";
 
 import Tile from "./Tile";
 
-export default function Grid({ setGameStatus }) {
+export default function Grid({ gameStatus, setGameStatus }) {
   const [tilesArray, setTilesArray] = useState([[]]); // 2D Array containing the tiles
   const gridParams = {
     width: 7,
@@ -105,9 +105,11 @@ export default function Grid({ setGameStatus }) {
     setTilesArray(newGrid);
   }
 
-  useState(() => {
-    generateNewGrid();
-  }, []);
+  useEffect(() => {
+    if (gameStatus === "playing") {
+      generateNewGrid();
+    }
+  }, [gameStatus]);
 
   /**
    * Change the inner state of a particular tile.
