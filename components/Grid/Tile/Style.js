@@ -16,17 +16,17 @@ const styles = StyleSheet.create({
   },
   text: {
     fontWeight: "bold",
-    color: "white",
+    color: "#E1F0C4",
     fontSize: 20,
   },
   emptyTile: {
-    backgroundColor: "#1A5E63",
+    backgroundColor: "#1F747A", //"#1A5E63",
   },
   hiddenTile: {
     backgroundColor: "#134549",
   },
   hiddenText: {
-    color: "white",
+    color: "#E1F0C4",
   },
   flaggedTile: {
     backgroundColor: "#9A94BC",

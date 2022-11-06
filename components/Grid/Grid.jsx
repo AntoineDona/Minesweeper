@@ -9,6 +9,8 @@ export default function Grid({
   minesAmount,
   gameStatus,
   setGameStatus,
+  score,
+  setScore,
 }) {
   const [tilesArray, setTilesArray] = useState([[]]); // 2D Array containing the tiles
 
@@ -120,7 +122,7 @@ export default function Grid({
         let value = 0;
         if (!tile.isMine) {
           const neighbors = getNeighbors(tile, newGrid);
-          //get all neighbooring tiless
+          //get all neighbooring tiles
           //count the mines around the tile
           neighbors.forEach((neighbor) => {
             if (neighbor.isMine) {
@@ -156,29 +158,84 @@ export default function Grid({
   }
 
   /**
+   * Check winning condition i.e all tiles without a mine have been revealed
+   * Toggle win if so
+   */
+  function checkWin() {
+    if (score === width * height - minesAmount) {
+      revealGrid();
+      setTimeout(() => {
+        setGameStatus("won");
+      }, 1000);
+    }
+  }
+
+  /**
+   * Run checkWin each time the score has increased
+   */
+  useEffect(() => {
+    // console.log("score", score);
+    // console.log("score to win", width * height - minesAmount);
+    checkWin();
+  }, [score]);
+
+  /**
+   * Check if the tile that has been pressed was a bomb or not
+   * Toggle loss if so
+   */
+  function checkLoss(tile) {
+    if (tile.isMine) {
+      //if we click on a mine, we lose
+      revealGrid();
+      setTimeout(() => {
+        setGameStatus("lost");
+      }, 1000);
+    }
+  }
+
+  /**
    * Reveal hidden tiles neighboring a tile with value 0
    */
   function revealTiles(tile) {
     if (tile.isHidden && !tile.hasBeenFlagged) {
-      changeTileValue(tile, { isHidden: false });
-      if (tile.isMine) {
-        //if we click on a mine, we lose
-        revealGrid();
-        setTimeout(() => {
-          setGameStatus("lost");
-        }, 2000);
+      checkLoss(tile);
+    } else {
+      const tilesToReveal = [tile];
+
+      /**
+       * Nested not-so-pretty recursive function that gets all the tiles to reveal
+       * @param {object} tile Tile from which we get the neighbors.
+       * @return {list} List of all tiles to reveal.
+       */
+      // eslint-disable-next-line no-inner-declarations
+      function getTilesToReveal(tile) {
+        const neighbors = getNeighbors(tile, tilesArray);
+        // Get neighbors to potentially propagate the reveal
+
+        neighbors.forEach((neighbor) => {
+          if (neighbor.isHidden && (tile.value === 0 || neighbor.value === 0)) {
+            //if the center tile has no mines around it or if the selected neighbor ampty,
+            if (!tilesToReveal.includes(neighbor)) {
+              // check if the neighbor is not already in the list,
+              tilesToReveal.push(neighbor);
+              // add it to the list of tiles to reveal
+              getTilesToReveal(neighbor);
+              //and check its own neighbors
+            }
+          }
+        });
       }
-      const neighbors = getNeighbors(tile, tilesArray);
-      // Get neighbors to potentially propagate the reveal
-      neighbors.forEach((neighbor) => {
-        if (neighbor.value === 0) {
-          revealTiles(neighbor);
-          //if a neighbor is empty, we reveal it
-        } else if (tile.value === 0) {
-          revealTiles(neighbor);
-          //else if the current tile has no mines around it, we reveal all its neighbors
-        }
+
+      getTilesToReveal(tile);
+      //get list of all tiles to reveal
+      tilesToReveal.forEach((tile) => {
+        //for each tile to reveal
+        changeTileValue(tile, { isHidden: false });
+        //reveal it
       });
+
+      setScore((score) => score + tilesToReveal.length);
+      //Add 1 to the counter of revealed tiles
     }
   }
 

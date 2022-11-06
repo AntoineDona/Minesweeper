@@ -28,7 +28,7 @@ export default function Tile({
       );
     }
   } else if (isMine) {
-    toDisplay = <MaterialCommunityIcons name="mine" size={24} color="red" />;
+    toDisplay = <MaterialCommunityIcons name="mine" size={24} color="black" />;
   } else if (value !== 0) {
     toDisplay = value;
   }

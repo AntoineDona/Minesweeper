@@ -8,6 +8,8 @@ export default function ModalMenu({
   setGameStatus,
   modalVisible,
   setModalVisible,
+  score,
+  setScore,
 }) {
   let title;
   let buttonText;
@@ -26,6 +28,7 @@ export default function ModalMenu({
   function retry() {
     setGameStatus("playing");
     setModalVisible(false);
+    setScore(0);
   }
 
   return (

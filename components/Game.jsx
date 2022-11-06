@@ -8,10 +8,11 @@ import ModalMenu from "./Modal/Modal";
 export default function Game() {
   const [gameStatus, setGameStatus] = useState("playing");
   const [modalVisible, setModalVisible] = useState(false);
+  const [score, setScore] = useState(0); // The score is defined as the number of discovered tiles
   const [gridParams, setGridParams] = useState({
     width: 7,
     height: 12,
-    minesAmount: 10,
+    minesAmount: 2,
   });
 
   const [fontsLoaded] = useFonts({
@@ -21,7 +22,7 @@ export default function Game() {
   const text = styles.text;
   let textStyle;
   if (fontsLoaded) {
-    const fontStyle = StyleSheet.create({ font: { FontFamily: "Land-Mine" } });
+    const fontStyle = StyleSheet.create({ font: { fontFamily: "Land-Mine" } });
     textStyle = StyleSheet.compose([text, fontStyle.font]);
   } else {
     textStyle = styles.text;
@@ -40,12 +41,16 @@ export default function Game() {
         {...gridParams}
         gameStatus={gameStatus}
         setGameStatus={setGameStatus}
+        score={score}
+        setScore={setScore}
       />
       <ModalMenu
         gameStatus={gameStatus}
         setGameStatus={setGameStatus}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
+        score={score}
+        setScore={setScore}
       />
     </View>
   );
