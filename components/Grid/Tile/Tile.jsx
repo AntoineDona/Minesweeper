@@ -18,6 +18,7 @@ export default function Tile({
   hasBeenFlagged,
   handleShortPress,
   handleLongPress,
+  gameStatus,
 }) {
   let toDisplay = "";
 

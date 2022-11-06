@@ -11,6 +11,7 @@ export default function Grid({
   setGameStatus,
   score,
   setScore,
+  setStopTimer,
 }) {
   const [tilesArray, setTilesArray] = useState([[]]); // 2D Array containing the tiles
 
@@ -161,6 +162,7 @@ export default function Grid({
    * Toggles win: Reveal grid and set game status to "won"
    */
   function toggleWin() {
+    setStopTimer(true);
     revealGrid();
     setTimeout(() => {
       setGameStatus("won");
@@ -185,6 +187,8 @@ export default function Grid({
    */
   function toggleLoss() {
     //if we click on a mine, we lose
+    setStopTimer(true);
+    console.log("set stop timer to true");
     revealGrid();
     setTimeout(() => {
       setGameStatus("lost");
@@ -197,6 +201,7 @@ export default function Grid({
   function revealTiles(tile) {
     if (tile.isHidden && !tile.hasBeenFlagged) {
       if (tile.isMine) {
+        toggleLoss();
       } else {
         const tilesToReveal = [tile];
 
@@ -283,6 +288,7 @@ export default function Grid({
               handleLongPress={() => {
                 flagTile(tile);
               }}
+              gameStatus={gameStatus}
             />
           ))}
         </View>
