@@ -166,7 +166,7 @@ export default function Grid({
     revealGrid();
     setTimeout(() => {
       setGameStatus("won");
-    }, 1000);
+    }, 100);
   }
 
   /**
@@ -192,7 +192,7 @@ export default function Grid({
     revealGrid();
     setTimeout(() => {
       setGameStatus("lost");
-    }, 1000);
+    }, 100);
   }
 
   /**

@@ -32,7 +32,7 @@ export default function Game() {
 
   useEffect(() => {
     if (gameStatus !== "playing") {
-      setModalVisible();
+      setModalVisible(true);
     }
   }, [gameStatus]);
 
