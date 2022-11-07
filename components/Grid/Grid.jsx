@@ -66,7 +66,6 @@ export default function Grid({
    */
   function generateMinesArray(width, height, mines) {
     const minesArray = Array(height).fill(false);
-    console.log("init", minesArray);
     //Creates an array filled with false
     let minesCount = 0;
     let iterations = 0;
@@ -93,7 +92,6 @@ export default function Grid({
    */
   function generateNewGrid() {
     const minesArray = generateMinesArray(width, height, minesAmount);
-    console.log(minesArray);
 
     const newGrid = [];
     for (let i = 0; i < height; i++) {
@@ -174,8 +172,6 @@ export default function Grid({
    * each time the score has increased
    */
   useEffect(() => {
-    // console.log("score", score);
-    // console.log("score to win", width * height - minesAmount);
     if (score === width * height - minesAmount) {
       toggleWin();
     }
@@ -188,7 +184,6 @@ export default function Grid({
   function toggleLoss() {
     //if we click on a mine, we lose
     setStopTimer(true);
-    console.log("set stop timer to true");
     revealGrid();
     setTimeout(() => {
       setGameStatus("lost");
@@ -201,6 +196,7 @@ export default function Grid({
   function revealTiles(tile) {
     if (tile.isHidden && !tile.hasBeenFlagged) {
       if (tile.isMine) {
+        Vibration.vibrate(1000);
         toggleLoss();
       } else {
         const tilesToReveal = [tile];

@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "minesweeper",
+    "owner": "antoinedn",
     "slug": "minesweeper",
     "version": "1.0.0",
     "orientation": "portrait",

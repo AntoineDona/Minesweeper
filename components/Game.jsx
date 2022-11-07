@@ -14,7 +14,7 @@ export default function Game() {
   const [gameParams, setGameParams] = useState({
     width: 7,
     height: 10,
-    minesAmount: 15,
+    minesAmount: 10,
   });
 
   const [fontsLoaded] = useFonts({

@@ -41,7 +41,7 @@ export default function ModalMenu({
     setStopTimer(false);
     setTimeout(() => {
       setModalVisible(false);
-    }, 1000);
+    }, 300);
   }
 
   const slideUpAnimation = useRef(new Animated.Value(0)).current;
