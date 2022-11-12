@@ -4,13 +4,12 @@ import { Text, View, StyleSheet } from "react-native";
 
 import Grid from "./Grid/Grid";
 import ModalMenu from "./Modal/Modal";
+import ScoreBoard from "./ScoreBoard/ScoreBoard";
 
 export default function Game() {
   const [gameStatus, setGameStatus] = useState("playing");
   const [modalVisible, setModalVisible] = useState(false);
   const [score, setScore] = useState(0); // The score is defined as the number of discovered tiles
-  const [timer, setTimer] = useState(0);
-  const [stopTimer, setStopTimer] = useState(false);
   const [gameParams, setGameParams] = useState({
     width: 7,
     height: 10,
@@ -36,15 +35,6 @@ export default function Game() {
     }
   }, [gameStatus]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!stopTimer) {
-        setTimer((t) => t + 1);
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [stopTimer]);
-
   return (
     <View>
       <Text style={textStyle}>MINESWEEPER</Text>
@@ -54,15 +44,13 @@ export default function Game() {
         setGameStatus={setGameStatus}
         score={score}
         setScore={setScore}
-        setStopTimer={setStopTimer}
       />
-      <View style={styles.scoreBox}>
-        <Text style={styles.score}>Time: {timer}</Text>
-        <Text style={styles.score}>
-          Score: {score.toString().padStart(2, "0")} /&nbsp;
-          {gameParams.width * gameParams.height - gameParams.minesAmount}
-        </Text>
-      </View>
+      <ScoreBoard
+        score={score}
+        gameParams={gameParams}
+        gameStatus={gameStatus}
+        test={score}
+      />
       <ModalMenu
         gameStatus={gameStatus}
         setGameStatus={setGameStatus}
@@ -70,8 +58,6 @@ export default function Game() {
         setModalVisible={setModalVisible}
         score={score}
         setScore={setScore}
-        setTimer={setTimer}
-        setStopTimer={setStopTimer}
       />
     </View>
   );
@@ -84,17 +70,5 @@ const styles = StyleSheet.create({
     fontSize: 30,
     textAlign: "center",
     marginBottom: 20,
-  },
-  scoreBox: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: "#1A5E63",
-    borderRadius: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  score: {
-    fontSize: 20,
-    color: "white",
   },
 });

@@ -16,8 +16,6 @@ export default function ModalMenu({
   modalVisible,
   setModalVisible,
   setScore,
-  setTimer,
-  setStopTimer,
 }) {
   let title;
   let buttonText;
@@ -37,8 +35,6 @@ export default function ModalMenu({
     close();
     setGameStatus("playing");
     setScore(0);
-    setTimer(0);
-    setStopTimer(false);
     setTimeout(() => {
       setModalVisible(false);
     }, 300);

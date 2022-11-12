@@ -11,7 +11,6 @@ export default function Grid({
   setGameStatus,
   score,
   setScore,
-  setStopTimer,
 }) {
   const [tilesArray, setTilesArray] = useState([[]]); // 2D Array containing the tiles
 
@@ -160,7 +159,6 @@ export default function Grid({
    * Toggles win: Reveal grid and set game status to "won"
    */
   function toggleWin() {
-    setStopTimer(true);
     revealGrid();
     setTimeout(() => {
       setGameStatus("won");
@@ -183,7 +181,6 @@ export default function Grid({
    */
   function toggleLoss() {
     //if we click on a mine, we lose
-    setStopTimer(true);
     revealGrid();
     setTimeout(() => {
       setGameStatus("lost");
